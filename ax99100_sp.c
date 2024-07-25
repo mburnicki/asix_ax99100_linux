@@ -2501,8 +2501,8 @@ static void serial99100_dma_rx_tasklet (unsigned long param)
 			up->port.icount.frame++;
 		if (up->k_lsr & UART_LSR_OE)
 			up->port.icount.overrun++;
-					//Mask off conditions which should be ignored.
-			up->k_lsr &= up->port.read_status_mask;		
+		//Mask off conditions which should be ignored.
+		up->k_lsr &= up->port.read_status_mask;		
 		}
 	if (up->k_lsr & ~up->port.ignore_status_mask & UART_LSR_OE)
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,9,0)
@@ -3121,5 +3121,7 @@ module_exit(serial99100_exit);
 
 MODULE_DEVICE_TABLE(pci, serial99100_pci_tbl);
 MODULE_DESCRIPTION("Asix 99100 serial driver module");
-MODULE_SUPPORTED_DEVICE("Asix serial 99100");
+#if defined(MODULE_SUPPORTED_DEVICE)
+  MODULE_SUPPORTED_DEVICE("Asix serial 99100");
+#endif
 MODULE_LICENSE("GPL");
