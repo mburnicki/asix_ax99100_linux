@@ -1674,7 +1674,7 @@ static int parport_ECP_supported(struct parport *pb)
 	default:
 		printk(KERN_WARNING "0x%lx: Unknown implementation ID\n",
 			pb->base);
-		/* Assume 1 */
+        fallthrough;  /* Assume 1 */
 	case 1:
 		pword = 1;
 	}
