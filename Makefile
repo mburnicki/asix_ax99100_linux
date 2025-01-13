@@ -48,7 +48,8 @@ default:
 	rm -rf Module.markers modules.*	
 
 install:
-	cp ax99100.ko  /lib/modules/$(shell uname -r)/kernel/$(MDIR)
+	mkdir -p /lib/modules/$(shell uname -r)/kernel/$(MDIR)
+	cp ax99100.ko  /lib/modules/$(shell uname -r)/kernel/$(MDIR)/
 	depmod -A
 	chmod +x ax99100
 	cp ax99100 /etc/init.d/
