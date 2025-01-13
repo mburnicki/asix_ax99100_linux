@@ -55,6 +55,10 @@
 #include <linux/ioctl.h>
 #include "ioctl.h"
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,0,0)
+  #include "pci-dma-compat.h"  // Local copy of file from older kernel.
+#endif
+
 #define UART99100_NR  16
 
 
@@ -1824,7 +1828,9 @@ static unsigned int serial99100_get_divisor(struct uart_port *port, unsigned int
 }
 
 //This is a port ops function to set the terminal settings.
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,20)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,0,0)
+static void serial99100_set_termios(struct uart_port *port, struct ktermios *termios, const struct ktermios *old)
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,20)
 static void serial99100_set_termios(struct uart_port *port, struct ktermios *termios, struct ktermios *old)
 #else
 static void serial99100_set_termios(struct uart_port *port, struct termios *termios, struct termios *old)
@@ -2538,6 +2544,8 @@ int serial99100_match_port(struct uart_port *port1, struct uart_port *port2)
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,37)
 static DECLARE_MUTEX(serial99100_sem);
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(6,0,0)
+static DEFINE_SEMAPHORE(serial99100_sem, 1);
 #else
 static DEFINE_SEMAPHORE(serial99100_sem);
 #endif
